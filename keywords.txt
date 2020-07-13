@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map for KickFilters
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+KickFilters	KEYWORD1
+
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+highpass	KEYWORD2
+lowpass	KEYWORD2
+bandpass	KEYWORD2
+movingAverage	KEYWORD2
+medianFilter1	KEYWORD2
+
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
