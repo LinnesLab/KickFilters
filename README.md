@@ -1,5 +1,6 @@
 # KickFilters
 A library for implementing a few basic 1st order filters including: high-pass, low-pass, and moving average filters.
+Specifically written for Arduino, but can be ported to other microcontrollers.
 
 Partially used in Linnes Lab's Kick LL smartwatch, a research device for measuring heart rate, respiration, and blood oxygen.
 Originally designed for monitoring substance abuse disorder patients in out-patient settings for ambulatory purposes.
