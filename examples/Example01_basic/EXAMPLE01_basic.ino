@@ -2,7 +2,7 @@
  * FILENAME: EXAMPLE01_basic.ino
  * AUTHOR:   Orlando S. Hoilett
  * CONTACT:  orlandohoilett@gmail.com
- * VERSION:  1.0.1
+ * VERSION:  2.0.0
  * 
  * 
  * AFFILIATIONS
@@ -26,8 +26,11 @@
  * Version 1.0.1
  * 2020/05/22:0327>
  *           - Changed name to Example not EXAMPLE
-  * 2020/06/15:0745>
+ * 2020/06/15:0745>
  *           - Added bandpass filter example.
+ * Version 2.0.0
+ * 2020/08/21:2031>
+ *           - Updated to match templated class.
  * 
  * 
  * DISCLAIMER
@@ -56,8 +59,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  * 
- * 
  */
+
 
 #include "KickFilters.h"
 
@@ -78,10 +81,10 @@ void setup()
   int16_t filtered[samples] = {0};
   int16_t tmpArr[samples] = {0};
   //Uncomment each line to use the filter (not all at once)
-  //KickFilters::highpass(input, filtered, samples, 1, 42);
-  //KickFilters::lowpass(input, filtered, samples, 1, 42);
-  KickFilters::bandpass(input, filtered, tmpArr, samples, 0.5, 3.5, 42);
-  //KickFilters::movingAverage(input, filtered, samples, 5);
+  KickFilters<int16_t>::highpass(input, filtered, samples, 1, 42);
+  //KickFilters<int16_t>::lowpass(input, filtered, samples, 1, 42);
+  //KickFilters<int16_t>::bandpass(input, filtered, tmpArr, samples, 0.5, 3.5, 42);
+  //KickFilters<int16_t>::movingAverage(input, filtered, samples, 5);
 
   
   //Print to Serial Plotter to display
