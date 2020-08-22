@@ -19,6 +19,7 @@ lowpass	KEYWORD2
 bandpass	KEYWORD2
 movingAverage	KEYWORD2
 medianFilter1	KEYWORD2
+notch	KEYWORD2
 
 
 
