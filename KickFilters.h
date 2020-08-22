@@ -2,7 +2,7 @@
  FILENAME:	KickFilters.h
  AUTHOR:	Orlando S. Hoilett, Benjamin D. Walters, and Akio K. Fujita
  EMAIL:		orlandohoilett@gmail.com
- VERSION:	2.0.0
+ VERSION:	2.1.0
  
  
  AFFILIATIONS
@@ -59,7 +59,9 @@
  2020/08/21:1542> (UTC-5)
 			- Added a notch filter.
  			- Moved to a templated class.
- 
+ Version 2.1.0
+ 2020/08/22:1726> (UTC-5)
+			- Added a median filter
  
  
  FUTURE UPDATES TO INCLUDE
@@ -113,6 +115,7 @@
 
 //Kick LL Libraries
 #include "KickMath.h"
+#include "KickSort.h"
 
 
 template<typename Type>
@@ -134,8 +137,9 @@ public:
 	static void notch(const Type input[], Type output[], uint16_t samples, float fc, float fs);
 	
 	static void notch(const Type input[], Type output[], uint16_t samples, float fc, float fs, float r_coeff);
-	
-	//static void medianFilter1(const int16_t input[], int16_t output[], int16_t tempArray[], const uint16_t samples, const uint16_t order);
+
+	static void median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
+							  const uint16_t samples, const uint16_t order, const uint16_t window);
 	
 };
 
@@ -373,16 +377,29 @@ void KickFilters<Type>::notch(const Type input[], Type output[], uint16_t sample
 
 
 //https://www.mathworks.com/help/signal/ref/medfilt1.html
-//void KickFilters::medianFilter1(const int16_t input[], int16_t output[], int16_t tempArray[],
-//								const uint16_t samples, const uint16_t order)
-//{
-//	for(uint16_t i = order/2; i < samples-(order/2) i++)
-//	{
-//
-//
-//		output[i] = KickMath::calcMedian()
-//	}
-//}
+template<typename Type>
+void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
+									  const uint16_t samples, const uint16_t order, const uint16_t window = 1)
+{
+	uint16_t outputIndex = 0;
+	
+	//Explicilty set empty spots in output array to 0
+	for(uint16_t i = 0; i < order; i++)
+	{
+		output[i] = 0;
+	}
+	
+	for(uint16_t i = order; i < samples; i += window)
+	{
+		for(uint16_t j = i; j < i+order; j++)
+		{
+			tempArray[j-i] = input[j];
+		}
+		
+		output[outputIndex] = KickMath<Type>::calcMedian(order, tempArray, tempArray2);
+		outputIndex++;
+	}
+}
 
 
 
