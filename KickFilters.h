@@ -115,7 +115,6 @@
 
 //Kick LL Libraries
 #include "KickMath.h"
-#include "KickSort.h"
 
 
 template<typename Type>
@@ -139,7 +138,7 @@ public:
 	static void notch(const Type input[], Type output[], uint16_t samples, float fc, float fs, float r_coeff);
 
 	static void median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
-							  const uint16_t samples, const uint16_t order, const uint16_t window);
+					   const uint16_t samples, const uint16_t order, const uint16_t window);
 	
 };
 
@@ -379,7 +378,7 @@ void KickFilters<Type>::notch(const Type input[], Type output[], uint16_t sample
 //https://www.mathworks.com/help/signal/ref/medfilt1.html
 template<typename Type>
 void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
-									  const uint16_t samples, const uint16_t order, const uint16_t window = 1)
+							   const uint16_t samples, const uint16_t order, const uint16_t window = 1)
 {
 	uint16_t outputIndex = 0;
 	

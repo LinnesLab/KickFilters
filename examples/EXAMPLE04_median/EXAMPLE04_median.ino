@@ -76,7 +76,7 @@ void setup()
   int16_t tmpArr2[samples] = {0};
   
   //takes about 2.375 ms to run on an Arduino Due (SAM3X8E), Arduino v.1.8.12
-  KickFilters<int16_t>::median(input, filtered, tmpArr, tmpArr2, samples, 4);
+  KickFilters<int16_t>::median(input, filtered, tmpArr, tmpArr2, samples, 3);
 
   
   //Print to Serial Plotter to display
