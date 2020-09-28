@@ -1,5 +1,5 @@
 /*
- * FILENAME: EXAMPLE05_median.ino
+ * FILENAME: EXAMPLE04_median.ino
  * AUTHOR:   Orlando S. Hoilett
  * CONTACT:  orlandohoilett@gmail.com
  * VERSION:  1.0.0
@@ -23,6 +23,10 @@
  * Version 1.0.0
  * 2020/08/22:1719>
  *           - Initial development
+ * Version 1.0.1
+ * 2020/09/28:1847>
+ *           - Fixed mistake in comments regarding name of
+ *           the file.
  * 
  * 
  * DISCLAIMER

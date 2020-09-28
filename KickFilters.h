@@ -2,7 +2,7 @@
  FILENAME:	KickFilters.h
  AUTHOR:	Orlando S. Hoilett, Benjamin D. Walters, and Akio K. Fujita
  EMAIL:		orlandohoilett@gmail.com
- VERSION:	2.1.0
+ VERSION:	3.0.0
  
  
  AFFILIATIONS
@@ -62,11 +62,15 @@
  Version 2.1.0
  2020/08/22:1726> (UTC-5)
 			- Added a median filter
+ Version 3.0.0
+ 2020/09/28:1803> (UTC-5)
+ 			- Changed dt parameter to fs in highpass, lowpass, and bandpass
+ 			filter functions
  
  
  FUTURE UPDATES TO INCLUDE
- 1. Making this a templated class, meaning it will accept any data type for the
- data to be filtered.
+ (CHECK) 1. Making this a templated class, meaning it will accept any data type
+ for the data to be filtered.
  2. A moving average filter function that takes cut-off frequency as an input.
  3. Adjusting moving average filter such that it appropriately deals with
  samples on the trailing end of the filter (or leading end). Right now, the
@@ -125,11 +129,11 @@ class KickFilters
 	
 public:
 	
-	static void highpass(const Type input[], Type output[], uint16_t samples, float fc, uint16_t dt);
+	static void highpass(const Type input[], Type output[], uint16_t samples, float fc, float fs);
 	
-	static void lowpass(const Type input[], Type output[], uint16_t samples, float fc, uint16_t dt);
+	static void lowpass(const Type input[], Type output[], uint16_t samples, float fc, float fs);
 	
-	static void bandpass(const Type input[], Type output[], Type tmpArray[], const uint16_t samples, float fc1, float fc2, uint16_t dt);
+	static void bandpass(const Type input[], Type output[], Type tmpArray[], const uint16_t samples, float fc1, float fc2, float fs);
 	
 	static void movingAverage(const Type input[], Type output[], uint16_t samples, uint16_t order);
 	
@@ -155,12 +159,12 @@ public:
 //here: https://en.wikipedia.org/wiki/High-pass_filter
 //The Wikipedia article is also located in the library in the "extras/references/" folder.
 template<typename Type>
-void KickFilters<Type>::highpass(const Type input[], Type output[], uint16_t samples, float fc, uint16_t dt)
+void KickFilters<Type>::highpass(const Type input[], Type output[], uint16_t samples, float fc, float fs)
 {
 	//Tau = Resistance(R)*Capacitance(C)
 	//re-arranging the cut-off frequency equaion [1/(2*pi*R*C)] to solve for R*C
 	float tau = 1/(2.0*PI*fc);
-	float alpha = tau / (tau + (dt/1000.0));
+	float alpha = tau / (tau + (1.0/fs));
 	
 	output[0] = input[0];
 	for (uint16_t i = 1; i < samples; i++)
@@ -183,12 +187,12 @@ void KickFilters<Type>::highpass(const Type input[], Type output[], uint16_t sam
 //here: https://en.wikipedia.org/wiki/Low-pass_filter
 //The Wikipedia article is also located in the library in the "extras/references/" folder.
 template<typename Type>
-void KickFilters<Type>::lowpass(const Type input[], Type output[], uint16_t samples, float fc, uint16_t dt)
+void KickFilters<Type>::lowpass(const Type input[], Type output[], uint16_t samples, float fc, float fs)
 {
 	//Tau = Resistance*Capacitance
 	//re-arranging the cut-off frequency equaion [1/(2*pi*R*C)] to solve for R*C
 	float tau = 1/(2.0*PI*fc);
-	float alpha = (dt/1000.0) / (tau + (dt/1000.0));
+	float alpha = (1.0/fs) / (tau + (1.0/fs));
 	
 	output[0] = alpha*input[0];
 	for (uint16_t i = 1; i < samples; i++)
@@ -217,10 +221,10 @@ void KickFilters<Type>::lowpass(const Type input[], Type output[], uint16_t samp
 //The Wikipedia articles are also located in the library in the "extras/references/" folder.
 template<typename Type>
 void KickFilters<Type>::bandpass(const Type input[], Type output[], Type tmpArray[],
-								 const uint16_t samples, float fc1, float fc2, uint16_t dt)
+								 const uint16_t samples, float fc1, float fc2, float fs)
 {
-	lowpass(input, tmpArray, samples, fc2, dt);
-	highpass(tmpArray, output, samples, fc1, dt);
+	lowpass(input, tmpArray, samples, fc2, fs);
+	highpass(tmpArray, output, samples, fc1, fs);
 }
 
 
@@ -375,7 +379,25 @@ void KickFilters<Type>::notch(const Type input[], Type output[], uint16_t sample
 }
 
 
-//https://www.mathworks.com/help/signal/ref/medfilt1.html
+
+//void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
+//								 const uint16_t samples, const uint16_t order, const uint16_t window = 1)
+//input			data array...declared as const so it's read-only
+//output		result of filter gets stored in this array. Not declared as
+//					const so it is eligible for both read and write
+//tmpArray		since the calcMedian function rearranges the original array, we
+//					feed it a tmpArray to prevent editing the original data array
+//tmpArray2		since the calcMedian function rearranges the original array, we
+//					feed it a tmpArray to prevent editing the original data array
+//samples		number of samples in array
+//order			filter order...how many samples should rearrange at a time for
+//					finding the median
+//window		number of samples to skip when moving the calculation across the
+//					entire data array; default value = 1
+//
+//Applies a median filter on an input dataset. Similar to MATLAB's medfilt1
+//except for the indexing of the array.
+//reference: https://www.mathworks.com/help/signal/ref/medfilt1.html
 template<typename Type>
 void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray[], Type tempArray2[],
 							   const uint16_t samples, const uint16_t order, const uint16_t window = 1)
@@ -390,6 +412,7 @@ void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray
 	
 	for(uint16_t i = order; i < samples; i += window)
 	{
+		//moved data to tmpArray to avoid editing original data array
 		for(uint16_t j = i; j < i+order; j++)
 		{
 			tempArray[j-i] = input[j];
@@ -399,7 +422,6 @@ void KickFilters<Type>::median(const Type input[], Type output[], Type tempArray
 		outputIndex++;
 	}
 }
-
 
 
 #endif /* KickFilters_h */
