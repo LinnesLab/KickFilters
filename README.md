@@ -7,5 +7,5 @@ Originally designed for monitoring substance abuse disorder patients in out-pati
 
 Open-sourcing this bit of code allows us to give back to the community in hopes that it will aide in someone else's development.
 
-Original Publication: http://dx.doi.org/10.1109/EMBC.2018.8513356
+Original Publication: http://dx.doi.org/10.1109/EMBC.2018.8513356  
 Open-Access Version: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6448578/
